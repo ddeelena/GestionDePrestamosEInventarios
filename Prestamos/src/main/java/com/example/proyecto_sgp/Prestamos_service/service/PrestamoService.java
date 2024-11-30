@@ -1,9 +1,14 @@
 package com.example.proyecto_sgp.Prestamos_service.service;
 
+//luego import a inventario
+import com.example.proyecto_sgp.inventario.repository.InventarioRepository;
+
 import com.example.proyecto_sgp.Prestamos_service.entity.Prestamo;
+import com.example.proyecto_sgp.Prestamos_service.entity.Recurso;
 import com.example.proyecto_sgp.Prestamos_service.entity.Usuario;
 import com.example.proyecto_sgp.Prestamos_service.repository.PrestamoRepository;
 import com.example.proyecto_sgp.Prestamos_service.repository.UsuarioRepository;
+import com.example.proyecto_sgp.inventario.ElementosDti.ElementosDti;
 import com.example.proyecto_sgp.Prestamos_service.interfaces.PrestamoInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,22 +26,32 @@ public class PrestamoService implements PrestamoInterface {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private InventarioRepository inventarioRepository;
+    
     @Override
     public void solicitarRecurso(Long usuarioId, Long recursoId, String ubicacion, String sede) {
         Usuario usuario = usuarioRepository.findById(usuarioId.toString())
-        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     
-        // Crear el préstamo
-        Prestamo prestamo = new Prestamo();
-        prestamo.setUsuario(usuario);
-        prestamo.setRecursoId(recursoId.toString());
-        prestamo.setUbicacion(ubicacion);
-        prestamo.setSede(sede);
-        prestamo.setEstado("Pendiente");
+        LocalDateTime fechaCreacion = LocalDateTime.now();
+    
+        Prestamo prestamo = new Prestamo(
+            null,
+            usuario,
+            recursoId.toString(),
+            ubicacion,
+            sede,
+            "Pendiente",
+            null,
+            fechaCreacion,
+            fechaCreacion,
+            null
+        );
     
         // Guardar el préstamo
         prestamoRepository.save(prestamo);
-    }
+    }    
 
     @Override
     public void aprobarPrestamo(Long prestamoId, String aprobadoPor) {
@@ -106,7 +121,27 @@ public class PrestamoService implements PrestamoInterface {
         prestamoRepository.deleteById(id);
     }
 
+    private Recurso mapearElementoDtiARecurso(ElementosDti elementoDti) {
+        Recurso recurso = new Recurso();
+        recurso.setId(elementoDti.getIdentificacion());
+        recurso.setNombre(elementoDti.getNombre());
+        recurso.setEstado(elementoDti.getEstado().toString());
+        return recurso;
+    }    
+    
     public Prestamo crearPrestamo(Prestamo prestamo) {
+
+        ElementosDti elementoDti = inventarioRepository.findById(prestamo.getRecursoId())
+            .orElseThrow(() -> new RuntimeException("Recurso no encontrado"));
+    
+        Recurso recurso = mapearElementoDtiARecurso(elementoDti);
+    
+        if (!recurso.getEstado().equals("Disponible")) {
+            throw new RuntimeException("El recurso no está disponible.");
+        }
+    
         return prestamoRepository.save(prestamo);
     }
+    
+
 }
