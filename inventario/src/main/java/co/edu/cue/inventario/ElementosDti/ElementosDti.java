@@ -23,18 +23,22 @@ public abstract class ElementosDti {
 
     protected EstadosElementos estado;
 
+    protected String ubicacion;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     protected LocalDate fechaCreacion;
 
 
-    public ElementosDti(String identificacion, String nombre, String descripcion, TipoDeElementos tipo, EstadosElementos estado, LocalDate fechaCreacion) {
+    public ElementosDti(String identificacion, String nombre, String descripcion, TipoDeElementos tipo,
+                        EstadosElementos estado, String ubicacion, LocalDate fechaCreacion) {
         this.identificacion = identificacion;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.tipo = tipo;
         this.estado = estado;
         this.fechaCreacion = fechaCreacion;
+        this.ubicacion = ubicacion;
     }
 
     //Metodos que todos los elementos deben implementar
@@ -78,6 +82,14 @@ public abstract class ElementosDti {
 
     public void setEstado(EstadosElementos estado) {
         this.estado = estado;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
     @Override
