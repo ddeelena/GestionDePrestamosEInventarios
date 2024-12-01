@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ConsultasImpl implements FiltrarEstado, FiltrarPorTipo, ConsultasService {
@@ -21,7 +22,7 @@ public class ConsultasImpl implements FiltrarEstado, FiltrarPorTipo, ConsultasSe
     private final InventarioRepository repository;
     private final MensajeUtil mensajes;
 
-        public ConsultasImpl(InventarioRepository repository, MensajeUtil mensajes) {
+    public ConsultasImpl(InventarioRepository repository, MensajeUtil mensajes) {
         this.repository = repository;
         this.mensajes = mensajes;
     }
@@ -47,6 +48,15 @@ public class ConsultasImpl implements FiltrarEstado, FiltrarPorTipo, ConsultasSe
         try {
             return repository.findByEstado(estado);
         } catch (Exception e) {
+            throw new RuntimeException(getMensaje("inventario.busqueda.error"));
+        }
+    }
+
+    @GetMapping
+    public Boolean existeElemento(String id){
+        try {
+            return repository.existsById(id);
+        } catch (Exception e){
             throw new RuntimeException(getMensaje("inventario.busqueda.error"));
         }
     }
