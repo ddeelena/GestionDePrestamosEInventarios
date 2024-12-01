@@ -2,6 +2,7 @@ package com.example.proyecto_sgp.Prestamos_service.controller;
 
 import com.example.proyecto_sgp.Prestamos_service.entity.Prestamo;
 import com.example.proyecto_sgp.Prestamos_service.service.PrestamoService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,8 @@ public class PrestamoController {
     }
 
     @PostMapping
-    public Prestamo crearPrestamo(@RequestBody Prestamo prestamo) {
-        return prestamoService.crearPrestamo(prestamo);
+    public void crearPrestamo(@RequestBody Prestamo prestamo) {
+        prestamoService.solicitarRecurso(prestamo.getUsuarioId(), prestamo.getRecursoId(), prestamo.getUbicacion(), prestamo.getSede());
     }
 
     @GetMapping("/{id}")

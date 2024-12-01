@@ -14,23 +14,25 @@ public class Prestamo {
 
     @Id
     private String id;
-    private Usuario usuario;
+    private String usuarioId;
     private String recursoId;
     private String ubicacion;
     private String sede;
     private String estado;
+    private LocalDateTime fechaPrestamo;
     private LocalDateTime fechaDevolucion;
+    // private Recurso recurso;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaModificacion;
     private LocalDateTime fechaEliminacion;
     private String modificadoPor;
     private String observaciones;
 
-    public Prestamo(String id, Usuario usuario, String recursoId, String ubicacion, String sede, String estado,
+    public Prestamo(String id, String usuarioId, String recursoId, String ubicacion, String sede, String estado,
                     LocalDateTime fechaDevolucion, LocalDateTime fechaCreacion, LocalDateTime fechaModificacion,
-                    LocalDateTime fechaEliminacion) {
+                    LocalDateTime fechaEliminacion, String modificadoPor, String observaciones) {
         this.id = id;
-        this.usuario = usuario;
+        this.usuarioId = usuarioId;
         this.recursoId = recursoId;
         this.ubicacion = ubicacion;
         this.sede = sede;
@@ -39,6 +41,8 @@ public class Prestamo {
         this.fechaCreacion = fechaCreacion;
         this.fechaModificacion = fechaModificacion;
         this.fechaEliminacion = fechaEliminacion;
+        this.modificadoPor = modificadoPor;
+        this.observaciones = observaciones;
     }
 
     public void setRecursoId(String recursoId) {
@@ -47,6 +51,22 @@ public class Prestamo {
     
     public String getModificadoPor() {
         return modificadoPor;
+    }
+    
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public LocalDateTime getFechaDevolucion() {
+        return fechaDevolucion;
+    }
+
+    public void setFechaDevolucion(LocalDateTime fechaDevolucion) {
+        this.fechaDevolucion = fechaDevolucion;
     }
     
     public void setModificadoPor(String modificadoPor) {
