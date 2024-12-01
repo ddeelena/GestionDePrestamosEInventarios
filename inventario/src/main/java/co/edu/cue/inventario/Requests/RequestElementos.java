@@ -3,18 +3,22 @@ package co.edu.cue.inventario.Requests;
 import co.edu.cue.inventario.Enums.EstadosElementos;
 import co.edu.cue.inventario.Enums.TipoDeElementos;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.mongodb.lang.NonNull;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public class AccesorioRequest {
+public class RequestElementos {
 
     @NotNull(message = "El elemento debe contener un nombre")
     private String nombre;
 
+    @NotNull(message = "El elemento debe contener una identificacion")
+    private String identificacion;
     private String descripcion;
 
+    private String ubicacion;
+
+    @NotNull(message = "El tipo es obligatorio")
     private TipoDeElementos tipo;
 
     @NotNull(message = "El estado es obligatorio")
@@ -58,5 +62,17 @@ public class AccesorioRequest {
 
     public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getUbicacion() {return ubicacion;}
+
+    public void setUbicacion(String ubicacion) {this.ubicacion = ubicacion;}
+
+    public String getIdentificacion() {
+        return identificacion;
+    }
+
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
     }
 }

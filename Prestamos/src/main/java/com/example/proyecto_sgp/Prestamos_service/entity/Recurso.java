@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
@@ -15,14 +16,31 @@ public class Recurso {
     @Id
     private String id;
 
+    @Field("codigo")
     private String codigo;
+
+    @Field("nombre")
     private String nombre;
+
+    @Field("descripcion")
     private String descripcion;
-    private String tipo;
+
+    @Field("tipo_recurso")
+    private String tipo; // Ajustado para coincidir con el campo de la base de datos
+
+    @Field("sede")
     private String sede;
+
+    @Field("estado")
     private String estado;
+
+    @Field("fecha_creacion")
     private LocalDateTime fechaCreacion;
+
+    @Field("fecha_modificacion")
     private LocalDateTime fechaModificacion;
+
+    @Field("fecha_eliminacion")
     private LocalDateTime fechaEliminacion;
 
     public Recurso(String id, String codigo, String nombre, String descripcion, String tipo, String sede, 
@@ -40,4 +58,3 @@ public class Recurso {
         this.fechaEliminacion = fechaEliminacion;
     }
 }
-
