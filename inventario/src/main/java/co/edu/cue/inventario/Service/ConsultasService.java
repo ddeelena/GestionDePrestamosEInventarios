@@ -9,4 +9,5 @@ import java.util.List;
 public interface ConsultasService {
     List<ElementosDti> filtrarPorTipo(TipoDeElementos tipo);
     List<ElementosDti> filtrarPorEstado(EstadosElementos estado);
+    Boolean existeElemento(String id);
 }

@@ -2,8 +2,10 @@ package co.edu.cue.inventario.Controller;
 
 import co.edu.cue.inventario.ElementosDti.ElementosDti;
 import co.edu.cue.inventario.Requests.RequestElementos;
+import co.edu.cue.inventario.Requests.RespuestaApi;
 import co.edu.cue.inventario.Service.ElementosService;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +23,10 @@ public class ElementosController {
 
 
     @PostMapping("/crear")
-    public ResponseEntity<String> crearElemento(@Valid @RequestBody RequestElementos request) {
+    public ResponseEntity<RespuestaApi<ElementosDti>> crearElemento(@Valid @RequestBody RequestElementos request) {
         // Llama al servicio con los datos mapeados desde el cuerpo de la solicitud
         try {
-            service.crearElemento(
+            ElementosDti elementoCreado = service.crearElemento(
                     request.getIdentificacion(),
                     request.getNombre(),
                     request.getDescripcion(),
@@ -32,73 +34,146 @@ public class ElementosController {
                     request.getEstado(),
                     request.getUbicacion(),
                     request.getFechaCreacion()
+                    );
+            RespuestaApi<ElementosDti> response = new RespuestaApi<>(
+                    "OK",
+                    "Elemento creado exitosamente",
+                    elementoCreado // El objeto creado se pasa directamente como `data`
             );
-            //return ResponseEntity.status(HttpStatus.CREATED).build(); // Retorna una respuesta HTTP 201
-            return ResponseEntity.status(HttpStatus.CREATED).body("Elemento creado exitosamente");
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el elemento");
+            RespuestaApi<ElementosDti> errorResponse = new RespuestaApi<>(
+                    "ERROR",
+                    "Error al crear el elemento",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<String> ActualizarElemento(
+    public ResponseEntity<RespuestaApi<ElementosDti>> ActualizarElemento(
             @PathVariable("id") String identificacion,
             @RequestBody RequestElementos request) {
         try {
-            service.EditarElemento(
+            ElementosDti actualizado = service.EditarElemento(
                     identificacion,
                     request.getNombre(),
                     request.getDescripcion(),
                     request.getEstado(),
                     request.getUbicacion()
             );
-            return ResponseEntity.ok("Elemento actualizado exitosamente");
+            RespuestaApi<ElementosDti> response = new RespuestaApi<>(
+                    "OK",
+                    "Elemento actualizado exitosamente",
+                    actualizado // El objeto creado se pasa directamente como `data`
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Elemento no encontrado");
+            // Captura la excepción cuando no se encuentra el elemento
+            RespuestaApi<ElementosDti> errorResponse = new RespuestaApi<>(
+                    "ERROR",
+                    "Elemento no encontrado",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el elemento");
+            // Captura cualquier otro tipo de error general
+            RespuestaApi<ElementosDti> errorResponse = new RespuestaApi<>(
+                    "ERROR",
+                    "Error al actualizar el elemento: " + e.getMessage(),
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
     @GetMapping("/detalles/{id}")
-    public ResponseEntity<?> verElemento(@PathVariable("id") String identificacion) {
+    public ResponseEntity<RespuestaApi<ElementosDti>> verElemento(
+            @PathVariable("id") String identificacion) {
         try {
             ElementosDti elementosDti = service.VerDetalles(identificacion);
-            return ResponseEntity.ok(elementosDti);
+            RespuestaApi<ElementosDti> response = new RespuestaApi<>(
+                    "OK",
+                    "Esta es la información del elemento",
+                    elementosDti // El objeto creado se pasa directamente como `data`
+            );
+            return ResponseEntity.status(HttpStatus.FOUND).body(response);
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Elemento no encontrado");
+            RespuestaApi<ElementosDti> errorResponse = new RespuestaApi<>(
+                    "ERROR",
+                    "Elemento no encontrado",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener los detalles del elemento");
+            RespuestaApi<ElementosDti> errorResponse = new RespuestaApi<>(
+                    "ERROR",
+                    "Error al actualizar el elemento: " + e.getMessage(),
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<String> deleteElement(@PathVariable("id") String identificacion) {
+    public ResponseEntity<RespuestaApi<ElementosDti>> deleteElement(
+            @PathVariable("id") String identificacion) {
         try {
-            service.EliminarElemento(identificacion);
-            return ResponseEntity.ok("Elemento eliminado exitosamente");
+            ElementosDti eliminado = service.EliminarElemento(identificacion);
+            RespuestaApi<ElementosDti> response = new RespuestaApi<>(
+                    "OK",
+                    "Elemento actualizado exitosamente",
+                    eliminado // El objeto creado se pasa directamente como `data`
+            );
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Elemento no encontrado");
+            RespuestaApi<ElementosDti> errorResponse = new RespuestaApi<>(
+                    "ERROR",
+                    "Elemento no encontrado",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar el elemento");
+            RespuestaApi<ElementosDti> errorResponse = new RespuestaApi<>(
+                    "ERROR",
+                    "Error al actualizar el elemento: " + e.getMessage(),
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
-    @PutMapping("/cambiarEstao/{id}")
-    public ResponseEntity<String> CambiarEstado(
+    @PutMapping("/cambiarEstado/{id}")
+    public ResponseEntity<RespuestaApi<ElementosDti>> CambiarEstado(
             @PathVariable("id") String identificacion,
             @RequestBody RequestElementos request) {
         try {
-            service.CambiarEstado(
+           ElementosDti actualizado = service.CambiarEstado(
                     identificacion,
                     request.getEstado(),
                     request.getUbicacion()
+                    );
+            RespuestaApi<ElementosDti> response = new RespuestaApi<>(
+                    "OK",
+                    "Elemento actualizado exitosamente",
+                    actualizado // El objeto creado se pasa directamente como `data`
             );
-            return ResponseEntity.ok("Se ha cambido el estado y la ubicación exitosamente");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Elemento no encontrado");
+            RespuestaApi<ElementosDti> errorResponse = new RespuestaApi<>(
+                    "ERROR",
+                    "Elemento no encontrado",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el elemento");
+            RespuestaApi<ElementosDti> errorResponse = new RespuestaApi<>(
+                    "ERROR",
+                    "Error al actualizar el elemento: " + e.getMessage(),
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 }

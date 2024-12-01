@@ -33,13 +33,14 @@ public class ElementosImpl implements CrearElemento, EditarElementos, EliminarEl
 
     @PostMapping
     @Override
-    public void crearElemento(String identificacion, String nombre, String descripcion, TipoDeElementos tipo,
-                              EstadosElementos estado, String ubicacion, LocalDate fechaCreacion){
+    public ElementosDti crearElemento(String identificacion, String nombre, String descripcion, TipoDeElementos tipo,
+                                      EstadosElementos estado, String ubicacion, LocalDate fechaCreacion){
 
         ElementosDtiFabrica fabrica = seleccionFabrica.obtenerFabrica(tipo);
 
         this.elemento = fabrica.crearElementoDti(identificacion, nombre, descripcion, tipo, estado,ubicacion, fechaCreacion);
         repository.save(elemento);
+        return elemento;
     }
 
     @GetMapping
@@ -51,8 +52,8 @@ public class ElementosImpl implements CrearElemento, EditarElementos, EliminarEl
 
     @PutMapping
     @Override
-    public void EditarElemento(String identificacion, String nombre, String descripcion,
-                               EstadosElementos estado, String ubicacion){
+    public ElementosDti EditarElemento(String identificacion, String nombre, String descripcion,
+                                       EstadosElementos estado, String ubicacion){
 
         elemento = repository.findById(identificacion)
                 .orElseThrow(() -> new NoSuchElementException("Elemento no encontrado"));
@@ -65,21 +66,23 @@ public class ElementosImpl implements CrearElemento, EditarElementos, EliminarEl
 
         // Guarda los cambios
         repository.save(elemento);
+        return elemento;
 
     }
 
     @DeleteMapping
     @Override
-    public void EliminarElemento(String identificacion){
+    public ElementosDti EliminarElemento(String identificacion){
         elemento = repository.findById(identificacion)
                 .orElseThrow(() -> new NoSuchElementException("Elemento con ID " + identificacion + " no encontrado"));
 
         // Eliminar el elemento
         repository.delete(elemento);
+        return elemento;
     }
     @PutMapping
     @Override
-    public void CambiarEstado(String identificacion, EstadosElementos estado, String ubicacion){
+    public ElementosDti CambiarEstado(String identificacion, EstadosElementos estado, String ubicacion){
         elemento = repository.findById(identificacion)
                 .orElseThrow(()-> new NoSuchElementException("No se ha podido cambiar el estado del elemento "+ identificacion));
 
@@ -88,6 +91,7 @@ public class ElementosImpl implements CrearElemento, EditarElementos, EliminarEl
         elemento.setUbicacion(ubicacion);
 
         repository.save(elemento);
+        return elemento;
     }
 
 }
