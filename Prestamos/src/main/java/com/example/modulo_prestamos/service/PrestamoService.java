@@ -46,6 +46,7 @@ public class PrestamoService implements CrearObservaciones, Crear, Eliminar, Mod
         // Valida antes de crear
         validationService.validarPrestamo(prestamo);
 
+        // Utiliza el Builder para crear un nuevo Prestamo
         Prestamo prestamoNuevo = builder.setUsuarioId(prestamo.getUsuarioId())
                 .setRecursoId(prestamo.getRecursoId())
                 .setUbicacion(prestamo.getUbicacion())
@@ -54,18 +55,20 @@ public class PrestamoService implements CrearObservaciones, Crear, Eliminar, Mod
                 .setFechaCreacion(LocalDateTime.now())
                 .build();
 
+        // Retorna el Prestamo guardado en la base de dato
         return prestamoRepository.save(prestamoNuevo);
     }
 
     @Override
     public Prestamo modificarPrestamo(String id, Prestamo prestamo) {
-        // Validar que el préstamo existe
+        // Valida que el préstamo existe
         Prestamo prestamoConsultado = consultarPrestamo(id)
                 .orElseThrow(() -> new PrestamoInvalidoException("Préstamo no encontrado"));
 
-        // Validar los datos del préstamo
+        // Valida los datos del préstamo
         validationService.validarPrestamo(prestamo);
 
+        // Asigna los nuevos datos del Prestamo
         prestamoConsultado.setUsuarioId(prestamo.getUsuarioId());
         prestamoConsultado.setRecursoId(prestamo.getRecursoId());
         prestamoConsultado.setUbicacion(prestamo.getUbicacion());
@@ -73,25 +76,37 @@ public class PrestamoService implements CrearObservaciones, Crear, Eliminar, Mod
         prestamoConsultado.setEstado(prestamo.getEstado());
         prestamoConsultado.setFechaModificacion(LocalDateTime.now());
 
+        // Retorna el Prestamo modificado en la base de dato
         return prestamoRepository.save(prestamoConsultado);
     }
 
     @Override
     public void eliminarPrestamo(String id) {
+        // Valida que el préstamo existe
         Prestamo prestamo = consultarPrestamo(id)
                 .orElseThrow(() -> new PrestamoInvalidoException("Préstamo no encontrado"));
 
+        // Asigna los datos para el soft delete del Prestamo
         prestamo.setEstado(Estado.INACTIVO);
         prestamo.setFechaEliminacion(LocalDateTime.now());
 
+        // Retorna el Prestamo modificado en la base de dato
         prestamoRepository.save(prestamo);
     }
 
     @Override
     public Prestamo agregarObservaciones(String observaciones, String prestamoId) {
+        // Valida los argumentos
         validationService.validarObservaciones(observaciones, prestamoId);
-        Prestamo prestamo = consultarPrestamo(prestamoId).get();
+
+        // Valida que el préstamo existe
+        Prestamo prestamo = consultarPrestamo(prestamoId)
+                .orElseThrow(() -> new PrestamoInvalidoException("Préstamo no encontrado"));
+
+        // Asigna las observaciones para el Prestamo
         prestamo.setObservaciones(observaciones);
+
+        // Retorna el Prestamo modificado en la base de dato
         return prestamoRepository.save(prestamo);
     }
 }

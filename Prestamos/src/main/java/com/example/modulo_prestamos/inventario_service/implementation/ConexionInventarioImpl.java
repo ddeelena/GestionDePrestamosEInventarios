@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 public class ConexionInventarioImpl implements ConexionInventarioInterface {
     private final RestTemplate restTemplate;
 
+    // Variable con la ruta hacia el servicio de Inventario
     @Value("${auth.external.url}")
     private String url;
 
@@ -25,15 +26,14 @@ public class ConexionInventarioImpl implements ConexionInventarioInterface {
     @Override
     public ApiResponse validarDisponibilidad(String recursoId) {
         try {
-            // Construir la URL con parámetros de consulta
+            // Construye la URL con parámetros de consulta
             String fullUrl = url + "/detalles/" + URLEncoder.encode(recursoId, StandardCharsets.UTF_8);
-            // Usar GET en lugar de POST
             ResponseEntity<ApiResponse> responseEntity = restTemplate.getForEntity(
                     fullUrl,
                     ApiResponse.class
             );
 
-            // Devolver el cuerpo de la respuesta
+            // Devuelve el cuerpo de la respuesta
             return responseEntity.getBody();
 
         } catch (Exception e) {
