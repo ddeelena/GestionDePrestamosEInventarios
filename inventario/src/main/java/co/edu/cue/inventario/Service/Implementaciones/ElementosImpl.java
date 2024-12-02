@@ -34,11 +34,15 @@ public class ElementosImpl implements CrearElemento, EditarElementos, EliminarEl
     @PostMapping
     @Override
     public ElementosDti crearElemento(String identificacion, String nombre, String descripcion, TipoDeElementos tipo,
-                                      EstadosElementos estado, String ubicacion, LocalDate fechaCreacion){
+                                      EstadosElementos estado, String ubicacion){
 
+        //Selecciona la fabrica de acuerdo al tipo de elemento que se quiere crear
         ElementosDtiFabrica fabrica = seleccionFabrica.obtenerFabrica(tipo);
 
-        this.elemento = fabrica.crearElementoDti(identificacion, nombre, descripcion, tipo, estado,ubicacion, fechaCreacion);
+        //llama a la fabrica seleccionada y crea el elemento
+        this.elemento = fabrica.crearElementoDti(identificacion, nombre, descripcion, tipo, estado,ubicacion, LocalDate.now());
+
+        //guarda el nuevo elemento en la BD y lo retorna para mostrarlo
         repository.save(elemento);
         return elemento;
     }
@@ -46,6 +50,8 @@ public class ElementosImpl implements CrearElemento, EditarElementos, EliminarEl
     @GetMapping
     @Override
     public ElementosDti VerDetalles(String identificacion){
+
+        //busca el elementos que se quiere mostrar
         return repository.findById(identificacion)
                 .orElseThrow(() -> new NoSuchElementException("Elemento con ID " + identificacion + " no encontrado"));
     }
@@ -55,6 +61,7 @@ public class ElementosImpl implements CrearElemento, EditarElementos, EliminarEl
     public ElementosDti EditarElemento(String identificacion, String nombre, String descripcion,
                                        EstadosElementos estado, String ubicacion){
 
+        //busca el elemento que se quiere modificar
         elemento = repository.findById(identificacion)
                 .orElseThrow(() -> new NoSuchElementException("Elemento no encontrado"));
 
@@ -63,6 +70,7 @@ public class ElementosImpl implements CrearElemento, EditarElementos, EliminarEl
         elemento.setDescripcion(descripcion);
         elemento.setEstado(estado);
         elemento.setUbicacion(ubicacion);
+        elemento.setFechaModificacion(LocalDate.now());
 
         // Guarda los cambios
         repository.save(elemento);
@@ -89,7 +97,9 @@ public class ElementosImpl implements CrearElemento, EditarElementos, EliminarEl
         //Se edita solamente el estado y su ubicación, cuando cambia el estado del préstamo
         elemento.setEstado(estado);
         elemento.setUbicacion(ubicacion);
+        elemento.setFechaModificacion(LocalDate.now());
 
+        //Guarda los cambios en el estado y la ubicacion, cambia la fecha de modificacion
         repository.save(elemento);
         return elemento;
     }

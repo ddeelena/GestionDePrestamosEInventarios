@@ -24,9 +24,9 @@ public class RequestElementos {
     @NotNull(message = "El estado es obligatorio")
     private EstadosElementos estado;
 
-    @NotNull(message = "La fecha de creación es obligatoria")
+   /* @NotNull(message = "La fecha de creación es obligatoria")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate fechaCreacion;
+    private LocalDate fechaCreacion;*/
 
     public String getNombre() {
         return nombre;
@@ -56,13 +56,13 @@ public class RequestElementos {
         this.estado = estado;
     }
 
-    public LocalDate getFechaCreacion() {
+/*    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
 
     public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
-    }
+    }*/
 
     public String getUbicacion() {return ubicacion;}
 

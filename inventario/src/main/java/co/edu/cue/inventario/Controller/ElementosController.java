@@ -24,7 +24,8 @@ public class ElementosController {
 
     @PostMapping("/crear")
     public ResponseEntity<RespuestaApi<ElementosDti>> crearElemento(@Valid @RequestBody RequestElementos request) {
-        // Llama al servicio con los datos mapeados desde el cuerpo de la solicitud
+        // Llama a la funcion de crear elemento del service y el envia los parametros extrayendolos del request que
+        // son los datos que se insertan desde el postman
         try {
             ElementosDti elementoCreado = service.crearElemento(
                     request.getIdentificacion(),
@@ -32,8 +33,7 @@ public class ElementosController {
                     request.getDescripcion(),
                     request.getTipo(),
                     request.getEstado(),
-                    request.getUbicacion(),
-                    request.getFechaCreacion()
+                    request.getUbicacion()
                     );
             RespuestaApi<ElementosDti> response = new RespuestaApi<>(
                     "OK",
@@ -51,6 +51,10 @@ public class ElementosController {
         }
     }
 
+
+    //Actualiza un elemento por medio del id del elemento
+    // el PathVariable trae la identificacion del elemento que se quiere modificar
+    // el requestBody trae los datos modificados en el POSTMAN
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<RespuestaApi<ElementosDti>> ActualizarElemento(
             @PathVariable("id") String identificacion,
