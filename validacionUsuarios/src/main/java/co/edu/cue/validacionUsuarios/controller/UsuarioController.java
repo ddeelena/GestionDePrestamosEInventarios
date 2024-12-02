@@ -21,40 +21,44 @@ public class UsuarioController {
         this.service = service;
     }
 
+    //Agregar un nuevo usuario a la lista de personas con limitacion de acceso al sistema
     @PostMapping("/agregar")
     public ResponseEntity<RespuestaApi<Usuario>> agregarUsuario(@Valid @RequestBody UsuarioRequest request){
         try{
+            //llama la funcion agregar usuario del service y guarda el usuario que llega como retorno
            Usuario usuario = service.agregarUsuario(
                     request.getNombre(),
-                    request.getId(),
-                    request.isCondicion(),
+                    request.getCorreo(),
+                    request.getCondicion(),
                     request.getDescripcion()
                     );
            RespuestaApi<Usuario> response = new RespuestaApi<>(
                     "OK",
-                    "Elemento creado exitosamente",
-                    usuario
+                    "Usuario creado exitosamente",
+                    usuario //el usuario que se genero de respuesta se guarda en el respuesta
            );
            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             RespuestaApi<Usuario> errorResponse = new RespuestaApi<>(
                     "ERROR",
                     "Error al crear el usuario: " + e.getMessage(),
-                    null
+                    null //como no se recupero ningun usuario se manda vacio el dato
             );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
-    @PutMapping("/actualizar/{id}")
+    //Se actualiza un usuario, buscandolo con el correo
+    @PutMapping("/actualizar/{correo}")
     public ResponseEntity<RespuestaApi<Usuario>> ActualizarElemento(
-            @PathVariable("id") String identificacion,
+            @PathVariable("correo") String correo,
             @RequestBody UsuarioRequest request) {
         try {
             Usuario usuario = service.EditarUsuario(
-                    identificacion,
-                    request.isCondicion(),
-                    request.getDescripcion()
+                    correo, //el correo llega por medio del pathVarible por eso no se extre del request
+                    request.getCondicion(),
+                    request.getDescripcion(),
+                    request.getNombre()
             );
             RespuestaApi<Usuario> response = new RespuestaApi<>(
                     "OK",
@@ -67,7 +71,7 @@ public class UsuarioController {
             RespuestaApi<Usuario> errorResponse = new RespuestaApi<>(
                     "ERROR",
                     "Usuario no encontrado",
-                    null
+                    null //como no se recupero ningun usuario se manda vacio el dato
             );
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (Exception e) {
@@ -75,57 +79,49 @@ public class UsuarioController {
             RespuestaApi<Usuario> errorResponse = new RespuestaApi<>(
                     "ERROR",
                     "Error al actualizar el usuario: " + e.getMessage(),
-                    null
+                    null //como no se recupero ningun usuario se manda vacio el dato
             );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
-    @GetMapping("/consultar/{id}")
-    public ResponseEntity<RespuestaApi<Boolean>> consultarUsuario(@PathVariable("id") String identificacion) {
+    @GetMapping("/consultar/{correo}")
+    public ResponseEntity<RespuestaApi<Usuario>> consultarUsuario(
+            @PathVariable("correo") String correo) {
         try {
-            Boolean esta = service.consultar(identificacion);
-            if (esta){
-                RespuestaApi<Boolean> response = new RespuestaApi<>(
-                        "OK",
-                        "El usuario "+identificacion+" esta en estado activo ",
-                        esta // El objeto creado se pasa directamente como `data`
-                );
-                return ResponseEntity.status(HttpStatus.OK).body(response);
-            }else{
-                RespuestaApi<Boolean> response = new RespuestaApi<>(
-                        "OK",
-                        "El usuario "+identificacion+" tiene  estado inactivo",
-                        esta // El objeto creado se pasa directamente como `data`
-                );
-                return ResponseEntity.status(HttpStatus.OK).body(response);
-            }
+            Usuario usuario = service.consultar(correo);
+            RespuestaApi<Usuario> response = new RespuestaApi<>(
+                    "OK",
+                    "El usuario "+correo+" esta en estado "+usuario.getCondicion(),
+                    usuario // El objeto creado se pasa directamente como `data`
+            );
+            return ResponseEntity.status(HttpStatus.FOUND).body(response);
         } catch (NoSuchElementException e) {
             // Captura la excepción cuando no se encuentra el elemento
-            RespuestaApi<Boolean> errorResponse = new RespuestaApi<>(
+            RespuestaApi<Usuario> errorResponse = new RespuestaApi<>(
                     "ERROR",
                     "Usuario no encontrado",
-                    null
+                    null //como no se recupero ningun usuario se manda vacio el dato
             );
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (Exception e) {
             // Captura cualquier otro tipo de error general
-            RespuestaApi<Boolean> errorResponse = new RespuestaApi<>(
+            RespuestaApi<Usuario> errorResponse = new RespuestaApi<>(
                     "ERROR",
                     "Error al buscar al usuario: " + e.getMessage(),
-                    null
+                    null //como no se recupero ningun usuario se manda vacio el dato
             );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
-    @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<RespuestaApi<Usuario>> deleteElement(@PathVariable("id") String identificacion) {
+    @DeleteMapping("/eliminar/{correo}")
+    public ResponseEntity<RespuestaApi<Usuario>> deleteElement(@PathVariable("correo") String correo) {
         try {
-            Usuario usuario = service.EliminarUsuario(identificacion);
+            Usuario usuario = service.EliminarUsuario(correo);
             RespuestaApi<Usuario> response = new RespuestaApi<>(
                     "OK",
-                    "Usuario con id "+identificacion+" eliminado exitosamente",
+                    "Usuario con correo "+correo+" fue eliminado exitosamente",
                     usuario // El objeto creado se pasa directamente como `data`
             );
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -134,7 +130,7 @@ public class UsuarioController {
             RespuestaApi<Usuario> errorResponse = new RespuestaApi<>(
                     "ERROR",
                     "Usuario no encontrado",
-                    null
+                    null //como no se recupero ningun usuario se manda vacio el dato
             );
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (Exception e) {
@@ -142,7 +138,7 @@ public class UsuarioController {
             RespuestaApi<Usuario> errorResponse = new RespuestaApi<>(
                     "ERROR",
                     "Error al eliminar el usuario: " + e.getMessage(),
-                    null
+                    null //como no se recupero ningun usuario se manda vacio el dato
             );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }

@@ -1,5 +1,6 @@
 package co.edu.cue.validacionUsuarios.service.Impl;
 
+import co.edu.cue.validacionUsuarios.enums.Estados;
 import co.edu.cue.validacionUsuarios.interfaces.AgregarUsuario;
 import co.edu.cue.validacionUsuarios.interfaces.ConsultarUsuario;
 import co.edu.cue.validacionUsuarios.interfaces.EditarUsuario;
@@ -26,42 +27,53 @@ public class UsuarioImpl implements UsuarioService, AgregarUsuario, EliminarUsua
 
     @PostMapping
     @Override
-    public Usuario agregarUsuario(String nombre, String id, boolean condicion, String descripcion){
+    public Usuario agregarUsuario(String nombre,String correo, Estados condicion, String descripcion){
 
-        persona = new Usuario(nombre, id, condicion, descripcion);
-
+        persona = new Usuario(nombre, correo,condicion, descripcion);
         repository.save(persona);
         return persona;
     }
 
     @GetMapping
     @Override
-    public Boolean consultar (String id){
-        persona= repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Persona con ID " + id + " no encontrado"));
-        return persona.isCondicion();
+    public Usuario consultar (String correo){
+        try {
+            return repository.findByCorreo(correo);
+        }catch (Exception e){
+            throw new RuntimeException("Persona con correo " + correo + " no encontrado");
+        }
     }
 
     @PutMapping
     @Override
-    public Usuario EditarUsuario(String id, Boolean condicion, String descripcion){
-        persona = repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Elemento no encontrado"));
+    public Usuario EditarUsuario(String correo, Estados condicion, String descripcion, String nombre){
+        try {
+            persona= repository.findByCorreo(correo);
+            persona.setCondicion(condicion);
+            persona.setCorreo(correo);
+            persona.setDescripcion(descripcion);
+            persona.setNombre(nombre);
 
-        persona.setCondicion(condicion);
-        persona.setDescripcion(descripcion);
+            repository.save(persona);
+            return persona;
 
-        repository.save(persona);
-        return persona;
+        }catch (Exception e){
+            throw new RuntimeException("Persona con correo " + correo + " no encontrado");
+        }
+
     }
 
     @DeleteMapping
     @Override
-    public Usuario EliminarUsuario(String id){
-        persona = repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Elemento no encontrado"));
+    public Usuario EliminarUsuario(String correo){
+        try {
+            persona = repository.findByCorreo(correo);
 
-        repository.delete(persona);
-        return persona;
+            repository.delete(persona);
+            return persona;
+
+        }catch (Exception e){
+            throw new RuntimeException("Se genero un error al buscar el correo");
+        }
     }
 }
