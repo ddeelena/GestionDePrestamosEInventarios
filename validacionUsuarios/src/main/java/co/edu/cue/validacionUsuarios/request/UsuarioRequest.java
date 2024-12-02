@@ -1,19 +1,20 @@
 package co.edu.cue.validacionUsuarios.request;
 
+import co.edu.cue.validacionUsuarios.enums.Estados;
 import jakarta.validation.constraints.NotNull;
 
 
 public class UsuarioRequest {
 
-    @NotNull(message = "El usuario debe tener una identifiaacion")
-    private String id;
     @NotNull(message = "El usuario debe tener un nombre")
     private String nombre;
     @NotNull(message = "El usuario debe tener una condicion")
-    private boolean condicion;
+    private Estados condicion;
     @NotNull(message = "El usuario debe tener una descripcion")
     private String descripcion;
 
+    @NotNull(message = "El usuario debe tener un correo")
+    private String correo;
 
     public String getNombre() {
         return nombre;
@@ -31,19 +32,19 @@ public class UsuarioRequest {
         this.descripcion = descripcion;
     }
 
-    public boolean isCondicion() {
+    public Estados getCondicion() {
         return condicion;
     }
 
-    public void setCondicion(boolean condicion) {
+    public void setCondicion(Estados condicion) {
         this.condicion = condicion;
     }
 
-    public String getId() {
-        return id;
+    public String getCorreo() {
+        return correo;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 }

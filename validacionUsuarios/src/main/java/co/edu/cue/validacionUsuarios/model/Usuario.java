@@ -1,6 +1,8 @@
 package co.edu.cue.validacionUsuarios.model;
 
+import co.edu.cue.validacionUsuarios.enums.Estados;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "ListaNegraUsuarios")
@@ -8,15 +10,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Usuario {
 
     private String nombre;
+    @Id
     private String id;
-    private boolean condicion ;
+    private String correo;
+    private Estados condicion;
     private String descripcion;
 
-    public Usuario(String nombre, String id, boolean condicion, String descripcion) {
+    public Usuario(String nombre, String correo, Estados condicion, String descripcion) {
         this.nombre = nombre;
-        this.id = id;
         this.condicion = condicion;
         this.descripcion = descripcion;
+        this.correo = correo;
     }
 
     public String getNombre() {
@@ -35,11 +39,11 @@ public class Usuario {
         this.id = id;
     }
 
-    public boolean isCondicion() {
+    public Estados getCondicion() {
         return condicion;
     }
 
-    public void setCondicion(boolean condicion) {
+    public void setCondicion(Estados condicion) {
         this.condicion = condicion;
     }
 
@@ -49,5 +53,13 @@ public class Usuario {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 }
