@@ -1,6 +1,5 @@
 package co.edu.cue.inventario.Service.Implementaciones;
 
-import co.edu.cue.inventario.Configuracion.ConfiguracionMensajes;
 import co.edu.cue.inventario.Configuracion.MensajeUtil;
 import co.edu.cue.inventario.ElementosDti.ElementosDti;
 import co.edu.cue.inventario.Enums.EstadosElementos;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class ConsultasImpl implements FiltrarEstado, FiltrarPorTipo, ConsultasService {
@@ -39,7 +37,7 @@ public class ConsultasImpl implements FiltrarEstado, FiltrarPorTipo, ConsultasSe
         try {
             return repository.findByTipo(tipo);
         } catch (Exception e) {
-            throw new RuntimeException(getMensaje("inventario.busqueda.error"));
+            throw new RuntimeException("Error al realizar la búsqueda");
         }
     }
 
@@ -48,7 +46,7 @@ public class ConsultasImpl implements FiltrarEstado, FiltrarPorTipo, ConsultasSe
         try {
             return repository.findByEstado(estado);
         } catch (Exception e) {
-            throw new RuntimeException(getMensaje("inventario.busqueda.error"));
+            throw new RuntimeException("Error al realizar la búsqueda");
         }
     }
 
@@ -57,7 +55,7 @@ public class ConsultasImpl implements FiltrarEstado, FiltrarPorTipo, ConsultasSe
         try {
             return repository.existsById(id);
         } catch (Exception e){
-            throw new RuntimeException(getMensaje("inventario.busqueda.error"));
+            throw new RuntimeException("Error al realizar la búsqueda");
         }
     }
 }

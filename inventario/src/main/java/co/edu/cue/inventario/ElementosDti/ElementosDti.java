@@ -25,10 +25,18 @@ public abstract class ElementosDti {
 
     protected String ubicacion;
 
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     protected LocalDate fechaCreacion;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    protected LocalDate fechaModificacion;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    protected LocalDate fechaEliminacion;
 
     public ElementosDti(String identificacion, String nombre, String descripcion, TipoDeElementos tipo,
                         EstadosElementos estado, String ubicacion, LocalDate fechaCreacion) {
@@ -40,6 +48,8 @@ public abstract class ElementosDti {
         this.fechaCreacion = fechaCreacion;
         this.ubicacion = ubicacion;
     }
+
+
 
     //Metodos que todos los elementos deben implementar
     public abstract TipoDeElementos getTipo();
@@ -95,5 +105,21 @@ public abstract class ElementosDti {
     @Override
     public String toString() {
         return super.toString();
+    }
+
+    public LocalDate getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(LocalDate fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+
+    public LocalDate getFechaEliminacion() {
+        return fechaEliminacion;
+    }
+
+    public void setFechaEliminacion(LocalDate fechaEliminacion) {
+        this.fechaEliminacion = fechaEliminacion;
     }
 }

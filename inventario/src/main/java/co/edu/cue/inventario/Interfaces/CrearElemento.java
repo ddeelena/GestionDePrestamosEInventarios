@@ -7,5 +7,5 @@ import co.edu.cue.inventario.Enums.TipoDeElementos;
 import java.time.LocalDate;
 
 public interface CrearElemento {
-    ElementosDti crearElemento(String identificacion, String nombre, String descripcion, TipoDeElementos tipo, EstadosElementos estado, String ubicacion, LocalDate fechaCreacion);
+    ElementosDti crearElemento(String identificacion, String nombre, String descripcion, TipoDeElementos tipo, EstadosElementos estado, String ubicacion);
 }

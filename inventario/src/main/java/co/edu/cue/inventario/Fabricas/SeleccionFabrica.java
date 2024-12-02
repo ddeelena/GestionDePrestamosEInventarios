@@ -2,10 +2,8 @@ package co.edu.cue.inventario.Fabricas;
 
 import co.edu.cue.inventario.Enums.TipoDeElementos;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
