@@ -1,5 +1,7 @@
 package co.edu.cue.validacionUsuarios.interfaces;
 
+import co.edu.cue.validacionUsuarios.model.Usuario;
+
 public interface AgregarUsuario {
-    void agregarUsuario(String nombre, String id, boolean condicion, String descripcion);
+    Usuario agregarUsuario(String nombre, String id, boolean condicion, String descripcion);
 }

@@ -26,12 +26,12 @@ public class UsuarioImpl implements UsuarioService, AgregarUsuario, EliminarUsua
 
     @PostMapping
     @Override
-    public void agregarUsuario(String nombre, String id, boolean condicion, String descripcion){
+    public Usuario agregarUsuario(String nombre, String id, boolean condicion, String descripcion){
 
-        System.out.println(nombre+","+id);
         persona = new Usuario(nombre, id, condicion, descripcion);
 
         repository.save(persona);
+        return persona;
     }
 
     @GetMapping
@@ -44,7 +44,7 @@ public class UsuarioImpl implements UsuarioService, AgregarUsuario, EliminarUsua
 
     @PutMapping
     @Override
-    public void EditarUsuario(String id, Boolean condicion, String descripcion){
+    public Usuario EditarUsuario(String id, Boolean condicion, String descripcion){
         persona = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Elemento no encontrado"));
 
@@ -52,14 +52,16 @@ public class UsuarioImpl implements UsuarioService, AgregarUsuario, EliminarUsua
         persona.setDescripcion(descripcion);
 
         repository.save(persona);
+        return persona;
     }
 
     @DeleteMapping
     @Override
-    public void EliminarUsuario(String id){
+    public Usuario EliminarUsuario(String id){
         persona = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Elemento no encontrado"));
 
         repository.delete(persona);
+        return persona;
     }
 }
