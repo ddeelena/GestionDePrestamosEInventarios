@@ -1,6 +1,5 @@
 package co.edu.cue.validacionUsuarios;
 
-
 import co.edu.cue.validacionUsuarios.model.Usuario;
 import co.edu.cue.validacionUsuarios.model.enums.Estados;
 import co.edu.cue.validacionUsuarios.repository.UsuarioRepository;

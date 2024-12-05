@@ -1,7 +1,7 @@
-    package co.edu.cue.validacionUsuarios.interfaces;
+package co.edu.cue.validacionUsuarios.interfaces;
 
-    import co.edu.cue.validacionUsuarios.model.Usuario;
+import co.edu.cue.validacionUsuarios.model.Usuario;
 
-    public interface ConsultarUsuario {
-        Usuario consultar(String id);
-    }
+public interface ConsultarUsuario {
+    Usuario consultar(String id);
+}
