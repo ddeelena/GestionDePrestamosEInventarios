@@ -18,7 +18,7 @@ public class AccesoriosMaterialDeSoporte extends ElementosDti {
     @Override
     public TipoDeElementos getTipo() {
         return TipoDeElementos.Accesorio;
-    }
+    } 
 
 
 
